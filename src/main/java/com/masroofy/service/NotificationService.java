@@ -1,3 +1,5 @@
+package com.masroofy.service;
+
 public class NotificationService {
     public void showNotification(String message) {
         System.out.println("Notification: " + message);
