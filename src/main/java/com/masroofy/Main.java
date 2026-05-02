@@ -6,7 +6,7 @@ public class Main {
         ExpenseController controller = new ExpenseController();
 
         // Create Budget
-        controller.createBudget(1000, "2026-04-01", "2026-04-30", 30);
+        controller.createBudget(1000, "2026-04-01", "2026-04-30");
 
         // Add Expense
         controller.addExpense(200, 1);
