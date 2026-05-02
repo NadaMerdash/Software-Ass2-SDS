@@ -1,7 +1,7 @@
 package com.masroofy.controller;
 
 import com.masroofy.service.TransactionManager;
-import com.masroofy.service.BudgetManager;
+import com.masroofy.model.BudgetManager;
 
 // Controller Layer
 public class ExpenseController {
@@ -21,8 +21,8 @@ public class ExpenseController {
         tm.deleteTransaction(id);
     }
 
-    public void createBudget(double allowance, String start, String end, int days) {
-        bm.createBudget(allowance, start, end, days);
+    public void createBudget(double allowance, String start, String end) {
+        bm.createBudget(allowance, start, end);
     }
 
     public double getSafeDailyLimit(double allowance, String endDate) {
