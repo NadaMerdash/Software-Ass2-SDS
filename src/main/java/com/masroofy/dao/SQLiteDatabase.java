@@ -1,4 +1,4 @@
-package dao;
+package com.masroofy.dao;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -140,8 +140,8 @@ public class SQLiteDatabase {
         return allowance - spent;
     }
 
-    public double getTotalExpenses() {
-        String sql = "SELECT SUM(amount) FROM transactions";
+    public double getTotalExpenses(int userID) {
+        String sql = "SELECT SUM(amount) FROM transactions WHERE id =" + userID;
 
         try {
             Statement stmt = conn.createStatement();
