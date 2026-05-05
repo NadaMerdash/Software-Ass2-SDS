@@ -28,4 +28,7 @@ public class ExpenseController {
     public double getSafeDailyLimit(double allowance, String endDate) {
         return bm.getSafeDailyLimit(allowance, endDate);
     }
+    public void resetCycle(int userID) {
+    bm.resetCycle(userID);
+}
 }
