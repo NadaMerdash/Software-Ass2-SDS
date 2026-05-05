@@ -1,7 +1,7 @@
 package com.masroofy.controller;
 
 import com.masroofy.service.TransactionManager;
-import com.masroofy.model.BudgetManager;
+import com.masroofy.service.BudgetManager;
 
 // Controller Layer
 public class ExpenseController {

@@ -1,8 +1,6 @@
-package com.masroofy.model;
+package com.masroofy.service;
 
 import com.masroofy.dao.SQLiteDatabase;
-import com.masroofy.service.NotificationService;
-import com.masroofy.service.TransactionManager;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
