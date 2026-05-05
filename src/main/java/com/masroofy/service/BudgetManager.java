@@ -10,8 +10,8 @@ import java.time.temporal.ChronoUnit;
 public class BudgetManager {
 
     SQLiteDatabase db = SQLiteDatabase.getInstance();
-    private TransactionManager transactionManager ;
-    private NotificationService notificationService;
+   private TransactionManager transactionManager = new TransactionManager();
+   private NotificationService notificationService = new NotificationService();
     
 
     public long calculateDaysBetween(String firstDate, String lastDate) {
@@ -54,7 +54,7 @@ public class BudgetManager {
         int days= db.getRemainingDays(userID);
         double balance = db.getRemainingBalance(userID);
         double newDailyLimit = calculateSafeDailyLimit(balance, days);
-        db.saveSafeDailyLimit(balance);
+        db.saveSafeDailyLimit(newDailyLimit);
         return newDailyLimit ;
     }
     
@@ -64,8 +64,8 @@ public class BudgetManager {
     }
     
     public void resetCycle(int userID){
-        transactionManager.deleteTransaction(userID);
-        notificationService.showNotification("Rest Done Successfuly");
+        transactionManager.deleteAllTransactions(userID);
+        notificationService.showNotification("Reset Done Successfully");
         
     }
 }

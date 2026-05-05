@@ -21,4 +21,7 @@ public class TransactionManager {
     public void deleteTransaction(int id) {
         db.deleteTransaction(id);
     }
+    public void deleteAllTransactions(int userID) {
+        db.deleteAllTransactions(userID);
+    }
 }

@@ -104,6 +104,18 @@ public class SQLiteDatabase {
         }
     }
 
+    public int deleteAllTransactions(int userID) {
+    String sql = "DELETE FROM transactions";
+    try {
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        return stmt.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+
+    return 0;
+}
+
     //  fetchTransaction
     public ResultSet fetchTransaction(int id) {
         String sql = "SELECT * FROM transactions WHERE id=" + id;
@@ -164,6 +176,23 @@ public class SQLiteDatabase {
 
         return (int) ChronoUnit.DAYS.between(today, end);
     }
+
+    public int getRemainingDays(int userID) {
+    String sql = "SELECT end_date FROM budget_cycle ORDER BY id DESC LIMIT 1";
+
+    try {
+        Statement stmt = conn.createStatement();
+        ResultSet rs = stmt.executeQuery(sql);
+
+        if (rs.next()) {
+            String endDate = rs.getString(1);
+            return getRemainingDays(endDate);
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return 0;
+}
 
     // saveSafeDailyLimit
     public void saveSafeDailyLimit(double limit) {
