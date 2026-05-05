@@ -140,8 +140,8 @@ public class SQLiteDatabase {
         return allowance - spent;
     }
 
-    public double getTotalExpenses(int userID) {
-        String sql = "SELECT SUM(amount) FROM transactions WHERE id =" + userID;
+    public double getTotalExpenses() {
+        String sql = "SELECT SUM(amount) FROM transactions";
 
         try {
             Statement stmt = conn.createStatement();
