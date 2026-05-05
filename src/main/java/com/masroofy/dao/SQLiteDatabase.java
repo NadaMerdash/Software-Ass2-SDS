@@ -147,9 +147,27 @@ public class SQLiteDatabase {
     }
 
     //  getRemainingBalance
-    public double getRemainingBalance(double allowance) {
-        double spent = getTotalExpenses();
-        return allowance - spent;
+    public double getRemainingBalance(int id) {
+        double spent = getTotalExpenses(id);
+        double allowance = 0.0;
+        String sql = "SELECT end_date FROM budget_cycle WHERE id=" + id;
+
+        try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setInt(1, id); 
+    
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    allowance = rs.getDouble("allowance");
+                    System.out.println("Avalable allowance: " + allowance);
+                } else {
+                    System.out.println("Can not find user: " + id);
+                  }
+            }
+        }catch (SQLException e) {
+            System.err.println(e.getMessage());
+            e.printStackTrace();
+        }
+                    return allowance - spent;
     }
 
     public double getTotalExpenses(int id) {
