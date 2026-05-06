@@ -171,21 +171,20 @@ public class SQLiteDatabase {
     }
 
     public double getTotalExpenses(int id) {
-        String sql = "SELECT SUM(amount) FROM transactions WHERE id=" + id;
+    String sql = "SELECT SUM(amount) FROM transactions WHERE id = ?";
 
-        try {
-            Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setInt(1, id);
+        ResultSet rs = pstmt.executeQuery();
 
-            if (rs.next()) {
-                return rs.getDouble(1);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (rs.next()) {
+            return rs.getDouble(1);
         }
-
-        return 0;
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+    return 0;
+}
 
 public int getRemainingDays(int userID) {
     String sql = "SELECT start_date, end_date FROM budget_cycle WHERE id = ? ORDER BY id DESC LIMIT 1";
