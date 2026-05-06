@@ -1,3 +1,5 @@
+package com.masroofy;
+
 import com.masroofy.controller.ExpenseController;
 
 public class Main {
@@ -18,7 +20,7 @@ public class Main {
         controller.deleteTransaction(1);
 
         // Get Safe Daily Limit
-        double safe = controller.getSafeDailyLimit(1000, "2026-04-30");
+        double safe = controller.getSafeDailyLimit(1);
 
         System.out.println("Safe Daily Limit: " + safe);
     }
