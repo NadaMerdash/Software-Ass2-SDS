@@ -187,27 +187,32 @@ public class SQLiteDatabase {
         return 0;
     }
 
-    //  getRemainingDays
-    public int getRemainingDays(String endDate) {
-        LocalDate today = LocalDate.now();
-        LocalDate end = LocalDate.parse(endDate);
+public int getRemainingDays(int userID) {
+    String sql = "SELECT start_date, end_date FROM budget_cycle WHERE id = ? ORDER BY id DESC LIMIT 1";
 
-        return (int) ChronoUnit.DAYS.between(today, end);
-    }
+    try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+        pstmt.setInt(1, userID);
+        try (ResultSet rs = pstmt.executeQuery()) {
+            if (rs.next()) {
+                // Get date as string
+                String startStr = rs.getString("start_date");
+                String endStr = rs.getString("end_date");
 
-    public int getRemainingDays(int userID) {
-    String sql = "SELECT end_date FROM budget_cycle ORDER BY id DESC LIMIT 1";
+                LocalDate startDate = LocalDate.parse(startStr);
+                LocalDate endDate = LocalDate.parse(endStr);
+                LocalDate now = LocalDate.now();
 
-    try {
-        Statement stmt = conn.createStatement();
-        ResultSet rs = stmt.executeQuery(sql);
+                // Start date is now eccept if the budget cycle does not start yet
+                LocalDate calculationStart = now.isAfter(startDate) ? now : startDate;
 
-        if (rs.next()) {
-            String endDate = rs.getString(1);
-            return getRemainingDays(endDate);
+                long daysBetween = ChronoUnit.DAYS.between(calculationStart, endDate);
+
+                // Return # of days or zero if the budget cycle has ended
+                return (daysBetween < 0) ? 0 : (int) daysBetween;
+            }
         }
     } catch (SQLException e) {
-        e.printStackTrace();
+        System.err.println(e.getMessage());
     }
     return 0;
 }
