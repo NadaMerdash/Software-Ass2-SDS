@@ -39,9 +39,9 @@ public class BudgetManager {
     }
 
     // Sequence: get safe Daily Limit
-    public double getSafeDailyLimit(double allowance, String endDate) {
-        double balance = db.getRemainingBalance(allowance);
-        int days = db.getRemainingDays(endDate);
+    public double getSafeDailyLimit(int userID) {
+        double balance = db.getRemainingBalance(userID);
+        int days = db.getRemainingDays(userID);
 
         double safe = calculateSafeDailyLimit(balance, days);
 
