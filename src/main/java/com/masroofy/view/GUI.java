@@ -1,18 +1,23 @@
 package com.masroofy.view;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.FlowLayout;
 import java.util.Date;
+
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTextField;
+
 import com.masroofy.controller.ExpenseController;
 import com.masroofy.service.InputValidation;
 import com.masroofy.service.NotificationService;
 
 public class GUI extends JFrame {
     private JTextField allowanceField;
-    private JTextField startDateField;
-    private JTextField endDateField;
-    private ExpenseController controller = new ExpenseController();
-    private InputValidation validation = new InputValidation();
-    private NotificationService notification = new NotificationService();
+    private final JTextField startDateField;
+    private final JTextField endDateField;
+    private final ExpenseController controller = new ExpenseController();
+    private final InputValidation validation = new InputValidation();
+    private final NotificationService notification = new NotificationService();
 
     public GUI() {
         setTitle("Masroofy");
@@ -82,7 +87,8 @@ public class GUI extends JFrame {
     }
 
     public void OpenDashboard() {
-        new Dashboard();
+        Dashboard dashboard = new Dashboard();
+        dashboard.openDashboard();
         dispose();
     }
 
@@ -97,7 +103,7 @@ public class GUI extends JFrame {
     private double parseDouble(String text) {
         try {
             return Double.parseDouble(text);
-        } catch (Exception e) {
+        } catch (NumberFormatException e) {
             notification.showError("Invalid number format");
             return 0;
         }

@@ -1,20 +1,27 @@
 package com.masroofy.view;
-import javax.swing.*;
-import java.awt.*;
+import java.awt.FlowLayout;
+
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
 
 public class Dashboard extends JFrame {
 
-    private JLabel limitLabel;
-    private JTextArea transactionsArea;
+    private final JLabel limitLabel;
+    private final JTextArea transactionsArea;
 
     public Dashboard() {
         
         setTitle("Dashboard - Financial Overview");
         setSize(400, 300);
         setLayout(new FlowLayout());
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
 
         limitLabel = new JLabel("Daily Limit: --");
         transactionsArea = new JTextArea(10, 30);
+        transactionsArea.setEditable(false);
         
         add(limitLabel);
         add(new JScrollPane(transactionsArea));
