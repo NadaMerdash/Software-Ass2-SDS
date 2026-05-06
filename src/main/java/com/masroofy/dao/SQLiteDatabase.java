@@ -150,7 +150,7 @@ public class SQLiteDatabase {
     public double getRemainingBalance(int id) {
         double spent = getTotalExpenses(id);
         double allowance = 0.0;
-        String sql = "SELECT end_date FROM budget_cycle WHERE id=" + id;
+        String sql = "SELECT end_date FROM budget_cycle WHERE id=?";
 
         try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
             pstmt.setInt(1, id); 
