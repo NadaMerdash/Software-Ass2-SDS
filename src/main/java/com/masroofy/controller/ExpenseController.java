@@ -1,9 +1,12 @@
 package com.masroofy.controller;
 
+import java.util.Date;
 import java.util.List;
 
 import com.masroofy.dao.SQLiteDatabase;
 import com.masroofy.service.BudgetManager;
+import com.masroofy.service.InputValidation;
+import com.masroofy.service.NotificationService;
 import com.masroofy.service.TransactionManager;
 
 // Controller Layer
@@ -11,6 +14,8 @@ public class ExpenseController {
 
     TransactionManager tm = new TransactionManager();
     BudgetManager bm = new BudgetManager();
+    InputValidation validation = new InputValidation();
+    NotificationService notification = new NotificationService();
      private SQLiteDatabase db = SQLiteDatabase.getInstance();
       private int currentUserId = -1;
 
@@ -62,4 +67,30 @@ public class ExpenseController {
      public void resetCycle() {
         bm.resetCycle(currentUserId);
     }
+
+      public double reCalculateSafeDailyLimit() {
+            return bm.reCalculateSafeDailyLimit(currentUserId);
+        }
+        public boolean validateExpense(double amount, int category) {
+            return validation.validateExpense(amount, category);
+        }
+        public boolean validateReset(int userId, int PIN, int StoredPIN) {
+            return validation.ValidateReset(userId, PIN, StoredPIN);
+        }
+
+        public boolean validate(double Allowance, Date startDate, Date endDate) {
+            return validation.validate(Allowance, startDate, endDate);
+        }
+
+        public String showNotification(String message) {
+            return notification.showNotification(message);
+        }
+
+        public String showError(String message) {
+            return notification.showError(message);
+        }
+
+        public String showConfirmationMessage(String message) {
+            return notification.showConfirmationMessage(message);
+        }
 }

@@ -8,6 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.util.Date;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -27,8 +28,6 @@ import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
 import com.masroofy.controller.ExpenseController;
-import com.masroofy.service.InputValidation;
-import com.masroofy.service.NotificationService;
 
 public class GUI extends JFrame {
     private static final Color BG_WHITE= Color.WHITE;
@@ -52,8 +51,7 @@ public class GUI extends JFrame {
     private JTextField startDateField;
     private JTextField endDateField;
     private final ExpenseController controller = new ExpenseController();
-    private final InputValidation validation = new InputValidation();
-    private final NotificationService notification = new NotificationService();
+ 
 
     private static final String[] CATEGORY_NAMES = {
         "1 - Food", "2 - Transport", "3 - Entertainment",
@@ -355,17 +353,17 @@ public class GUI extends JFrame {
             try {
                 double amount = Double.parseDouble(amountField.getText().trim());
                 int catId     = catCombo.getSelectedIndex() + 1; // 1-based
-                if (!validation.validateExpense(amount, catId)) {
+                if (!controller.validateExpense(amount, catId)) {
                     JOptionPane.showMessageDialog(
-                        dlg, notification.showError("Invalid input."), "Error", JOptionPane.ERROR_MESSAGE);
+                        dlg, controller.showError("Invalid input."), "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 controller.addExpense(amount, catId);
                 JOptionPane.showMessageDialog(
-                    dlg, notification.showNotification("Expense added!"), "Success",
+                    dlg, controller.showNotification("Expense added!"), "Success",
                     JOptionPane.INFORMATION_MESSAGE);
                 dlg.dispose();
-            } catch (NumberFormatException ex) { JOptionPane.showMessageDialog(dlg, notification.showError("Amount must be a number."), "Error", JOptionPane.ERROR_MESSAGE); }
+            } catch (NumberFormatException ex) { JOptionPane.showMessageDialog(dlg, controller.showError("Amount must be a number."), "Error", JOptionPane.ERROR_MESSAGE); }
         });
         cancel.addActionListener(e -> dlg.dispose());
 
@@ -375,7 +373,7 @@ public class GUI extends JFrame {
      public void editTransaction() {
         List<String[]> txns = controller.getAllTransactions();
         if (txns.isEmpty()) {
-            JOptionPane.showMessageDialog(this, notification.showNotification("No transactions found."), "Info",
+            JOptionPane.showMessageDialog(this, controller.showNotification("No transactions found."), "Info",
                 JOptionPane.INFORMATION_MESSAGE);
             return;
         }
@@ -400,19 +398,19 @@ public class GUI extends JFrame {
                 int txnId = Integer.parseInt(txns.get(idx)[0]);
                 double amount = Double.parseDouble(amountField.getText().trim());
                 int catId     = catCombo.getSelectedIndex() + 1;
-                if (!validation.validateExpense(amount, catId)) {
+                if (!controller.validateExpense(amount, catId)) {
                     JOptionPane.showMessageDialog(
-                    dlg, notification.showError("Invalid input."), "Error", JOptionPane.ERROR_MESSAGE);
+                    dlg, controller.showError("Invalid input."), "Error", JOptionPane.ERROR_MESSAGE);
                     return;
                 }
                 controller.editTransaction(txnId, amount, catId);
                 JOptionPane.showMessageDialog(
-                    dlg, notification.showNotification("Transaction updated!"), "Success",
+                    dlg, controller.showNotification("Transaction updated!"), "Success",
                     JOptionPane.INFORMATION_MESSAGE);
                 dlg.dispose();
             } catch (NumberFormatException ex) 
             { 
-             JOptionPane.showMessageDialog(dlg, notification.showError("Amount must be a number."), "Error", JOptionPane.ERROR_MESSAGE); }
+             JOptionPane.showMessageDialog(dlg, controller.showError("Amount must be a number."), "Error", JOptionPane.ERROR_MESSAGE); }
         });
         cancel.addActionListener(e -> dlg.dispose());
         finishDialog(dlg, form, cancel, ok);
@@ -420,7 +418,7 @@ public class GUI extends JFrame {
      public void deleteTransaction() {
         List<String[]> txns = controller.getAllTransactions();
         if (txns.isEmpty()) {
-            JOptionPane.showMessageDialog(this, notification.showNotification("No transactions found."), "Info",
+            JOptionPane.showMessageDialog(this, controller.showNotification("No transactions found."), "Info",
                 JOptionPane.INFORMATION_MESSAGE);
             return;
         }
@@ -441,7 +439,7 @@ public class GUI extends JFrame {
                 "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (confirm == JOptionPane.YES_OPTION) {
                 controller.deleteTransaction(txnId);
-                JOptionPane.showMessageDialog(dlg, notification.showNotification("Deleted."), "Success",
+                JOptionPane.showMessageDialog(dlg, controller.showNotification("Deleted."), "Success",
                     JOptionPane.INFORMATION_MESSAGE);
                 dlg.dispose();
             }
@@ -451,27 +449,27 @@ public class GUI extends JFrame {
     }
      public void ResetClick() {
         String pinInput = JOptionPane.showInputDialog(this,
-          notification.showNotification("Enter your PIN to confirm reset:"), "Reset", JOptionPane.WARNING_MESSAGE);
+          controller.showNotification("Enter your PIN to confirm reset:"), "Reset", JOptionPane.WARNING_MESSAGE);
         if (pinInput == null) return;
         int pin;
         try { pin = Integer.parseInt(pinInput.trim()); }
         catch (NumberFormatException e) { 
-            JOptionPane.showMessageDialog( this, notification.showError("PIN must be a number."),
+            JOptionPane.showMessageDialog( this, controller.showError("PIN must be a number."),
      "Error",JOptionPane.ERROR_MESSAGE);
      return; }
 
         int storedPin = controller.getStoredPin();
-        if (!validation.ValidateReset(controller.getCurrentUserId(), pin, storedPin)) {
-            JOptionPane.showMessageDialog(this, notification.showError("Incorrect PIN. Reset cancelled."), "Error", JOptionPane.ERROR_MESSAGE);
+        if (!controller.validateReset(controller.getCurrentUserId(), pin, storedPin)) {
+            JOptionPane.showMessageDialog(this, controller.showError("Incorrect PIN. Reset cancelled."), "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
         int confirm = JOptionPane.showConfirmDialog(this,
-            notification.showConfirmationMessage("All your transactions will be deleted. Continue?"),
+            controller.showConfirmationMessage("All your transactions will be deleted. Continue?"),
             "Confirm Reset", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (confirm == JOptionPane.YES_OPTION) {
             controller.resetCycle();
-            JOptionPane.showMessageDialog(this, notification.showNotification("Reset complete. All transactions cleared."),
+            JOptionPane.showMessageDialog(this, controller.showNotification("Reset complete. All transactions cleared."),
                 "Done", JOptionPane.INFORMATION_MESSAGE);
         }
     }
@@ -486,7 +484,7 @@ public class GUI extends JFrame {
         allowance = Double.parseDouble(allowTxt);
     } catch (NumberFormatException ex) {
         JOptionPane.showMessageDialog(this,
-            notification.showError("Allowance must be a number."),
+            controller.showError("Allowance must be a number."),
             "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
@@ -495,17 +493,17 @@ public class GUI extends JFrame {
         endDate   = java.sql.Date.valueOf(endTxt);
     } catch (IllegalArgumentException ex) {
         JOptionPane.showMessageDialog(this,
-            notification.showError("Dates must be in YYYY-MM-DD format."),
+            controller.showError("Dates must be in YYYY-MM-DD format."),
             "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
 
-    if (!validation.validate(allowance, startDate, endDate)) {
-        JOptionPane.showMessageDialog(this, notification.showError("Invalid budget details."), "Error", JOptionPane.ERROR_MESSAGE);
+    if (!controller.validate(allowance, startDate, endDate)) {
+        JOptionPane.showMessageDialog(this, controller.showError("Invalid budget details."), "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
     controller.createBudget(allowance, startTxt, endTxt);
-    JOptionPane.showMessageDialog(this,notification.showNotification("Budget saved!"),
+    JOptionPane.showMessageDialog(this,controller.showNotification("Budget saved!"),
         "Success",JOptionPane.INFORMATION_MESSAGE);
 }
     public void openDashboard() {
@@ -514,7 +512,7 @@ public class GUI extends JFrame {
     private double parseDouble(String t) {
         try { return Double.parseDouble(t); }
         catch (Exception e) {
-            notification.showError("Invalid number");
+          JOptionPane.showMessageDialog(this, controller.showError("Invalid number"), "Error", JOptionPane.ERROR_MESSAGE);
             return 0;
         }
     }
