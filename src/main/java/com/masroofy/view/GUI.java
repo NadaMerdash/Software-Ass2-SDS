@@ -237,7 +237,7 @@ public class GUI extends JFrame {
         edit .addActionListener(e -> editTransaction());
         del  .addActionListener(e -> deleteTransaction());
         reset.addActionListener(e -> ResetClick());
-        dash .addActionListener(e -> openDashboard());
+        dash .addActionListener(e -> openDashboard(controller.getCurrentUserId()));
         p.add(save); p.add(add);  p.add(edit);
         p.add(del);  p.add(reset); p.add(dash);
         return p;
@@ -457,7 +457,6 @@ public class GUI extends JFrame {
             JOptionPane.showMessageDialog( this, controller.showError("PIN must be a number."),
      "Error",JOptionPane.ERROR_MESSAGE);
      return; }
-
         int storedPin = controller.getStoredPin();
         if (!controller.validateReset(controller.getCurrentUserId(), pin, storedPin)) {
             JOptionPane.showMessageDialog(this, controller.showError("Incorrect PIN. Reset cancelled."), "Error", JOptionPane.ERROR_MESSAGE);
@@ -506,7 +505,10 @@ public class GUI extends JFrame {
     JOptionPane.showMessageDialog(this,controller.showNotification("Budget saved!"),
         "Success",JOptionPane.INFORMATION_MESSAGE);
 }
-    public void openDashboard() {
+    public void openDashboard(int userId) {
+       Dashboard dash = new Dashboard(userId, this);
+        dash.setVisible(true);
+        this.setVisible(false);
 
 }
     private double parseDouble(String t) {

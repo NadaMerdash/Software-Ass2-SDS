@@ -12,7 +12,6 @@ public class Transaction {
         this.categoryId = categoryId;
         this.date = date;
     }
-
     public int getId() {
         return id;
     }
@@ -27,5 +26,14 @@ public class Transaction {
 
     public String getDate() {
         return date;
+    }
+    public void setAmount(double amount) {
+        this.amount = amount;
+    }
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+    }
+    public void setDate(String date) {
+        this.date = date;
     }
 }
