@@ -112,6 +112,14 @@ stmt.execute("CREATE TABLE IF NOT EXISTS category (" +
             return false;
         }
     }
+    public boolean userExists(int userId) {
+        String sql = "SELECT id FROM users WHERE id=?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            try (ResultSet rs = ps.executeQuery()) { return rs.next(); }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return false;
+    }
 
     public boolean validateUser(int userId, int pin) {
         String sql = "SELECT pin FROM users WHERE id=?";
