@@ -476,25 +476,38 @@ public class GUI extends JFrame {
         }
     }
 
-  private void saveBudget() {
-        String allowTxt = allowanceField.getText().trim();
-        String startTxt = startDateField.getText().trim();
-        String endTxt   = endDateField.getText().trim();
-
-        if (allowTxt.isEmpty() || startTxt.isEmpty() || endTxt.isEmpty()) {
-            JOptionPane.showMessageDialog(this, notification.showError("Please fill in all budget fields."), "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-        double allowance;
-        try { allowance = Double.parseDouble(allowTxt); }
-        catch (NumberFormatException ex) { JOptionPane.showMessageDialog(this, notification.showError("Allowance must be a number."), "Error", JOptionPane.ERROR_MESSAGE); return; }
-
-        if (allowance <= 0) { JOptionPane.showMessageDialog(this, notification.showError("Allowance must be greater than zero."), "Error", JOptionPane.ERROR_MESSAGE); return; }
-
-        controller.createBudget(allowance, startTxt, endTxt);
-        JOptionPane.showMessageDialog(this, notification.showNotification("Budget saved!"), "Success",
-            JOptionPane.INFORMATION_MESSAGE);
+ private void saveBudget() {
+    String allowTxt = allowanceField.getText().trim();
+    String startTxt = startDateField.getText().trim();
+    String endTxt   = endDateField.getText().trim(); 
+    double allowance;
+     Date startDate ,endDate;
+    try {
+        allowance = Double.parseDouble(allowTxt);
+    } catch (NumberFormatException ex) {
+        JOptionPane.showMessageDialog(this,
+            notification.showError("Allowance must be a number."),
+            "Error", JOptionPane.ERROR_MESSAGE);
+        return;
     }
+    try {
+        startDate = java.sql.Date.valueOf(startTxt);
+        endDate   = java.sql.Date.valueOf(endTxt);
+    } catch (IllegalArgumentException ex) {
+        JOptionPane.showMessageDialog(this,
+            notification.showError("Dates must be in YYYY-MM-DD format."),
+            "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+
+    if (!validation.validate(allowance, startDate, endDate)) {
+        JOptionPane.showMessageDialog(this, notification.showError("Invalid budget details."), "Error", JOptionPane.ERROR_MESSAGE);
+        return;
+    }
+    controller.createBudget(allowance, startTxt, endTxt);
+    JOptionPane.showMessageDialog(this,notification.showNotification("Budget saved!"),
+        "Success",JOptionPane.INFORMATION_MESSAGE);
+}
     public void openDashboard() {
 
 }
