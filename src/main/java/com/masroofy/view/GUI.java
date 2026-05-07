@@ -462,7 +462,6 @@ public class GUI extends JFrame {
             JOptionPane.showMessageDialog(this, controller.showError("Incorrect PIN. Reset cancelled."), "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         int confirm = JOptionPane.showConfirmDialog(this,
             controller.showConfirmationMessage("All your transactions will be deleted. Continue?"),
             "Confirm Reset", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -496,7 +495,6 @@ public class GUI extends JFrame {
             "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
-
     if (!controller.validate(allowance, startDate, endDate)) {
         JOptionPane.showMessageDialog(this, controller.showError("Invalid budget details."), "Error", JOptionPane.ERROR_MESSAGE);
         return;
