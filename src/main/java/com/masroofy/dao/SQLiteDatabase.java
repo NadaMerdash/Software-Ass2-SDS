@@ -44,10 +44,10 @@ public class SQLiteDatabase {
                 CREATE TABLE IF NOT EXISTS users (
                     id INTEGER PRIMARY KEY,
                     pin INTEGER NOT NULL,
-                    sorted_pin INTEGER NOT NULL
+                    stored_pin INTEGER NOT NULL
                 );
             """);
-
+            
             stmt.execute("""
                 CREATE TABLE IF NOT EXISTS transactions (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,

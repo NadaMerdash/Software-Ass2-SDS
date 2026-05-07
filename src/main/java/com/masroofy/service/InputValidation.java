@@ -26,29 +26,28 @@ public class InputValidation {
         return true;
     }
 
-    public boolean validateExpense(double amount, int category) {
+     public boolean validateExpense(double amount, int category) {
         if (amount <= 0) {
             notificationService.showError("Expense amount must be a positive number.");
             return false;
         }
-        if (category <= 0) {
+        if (category < 1 || category > 7) {
             notificationService.showError("Invalid expense category.");
             return false;
         }
         return true;
     }
 
-    public boolean ValidateReset(int userID, int PIN, int SortedPIN) {
+    public boolean ValidateReset(int userID, int PIN, int StoredPIN) {
         if (userID <= 0) {
             notificationService.showError("Invalid user ID.");
             return false;
         }
-        if (PIN <1000 || PIN > 9999) {
-            notificationService.showError("Invalid PIN.");
+        if (PIN < 1000 || PIN > 9999) {
+            notificationService.showError("PIN must be 4 digits.");
             return false;
         }
-        if(PIN != SortedPIN)
-        {
+        if (PIN != StoredPIN) {
             notificationService.showError("Incorrect PIN.");
             return false;
         }

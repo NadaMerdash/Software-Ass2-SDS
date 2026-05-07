@@ -1,10 +1,10 @@
 package com.masroofy.service;
 
-import com.masroofy.dao.SQLiteDatabase;
-
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+
+import com.masroofy.dao.SQLiteDatabase;
 
 // Service Layer
 public class BudgetManager {
@@ -32,10 +32,10 @@ public class BudgetManager {
     }
 
     // Sequence: Create Budget
-    public void createBudget(double allowance, String start, String end) {
-        long days =calculateDaysBetween(start,end);
+     public void createBudget(int userId, double allowance, String start, String end) {
+        long days = calculateDaysBetween(start, end);
         double dailyLimit = calculateSafeDailyLimit(allowance, days);
-        db.saveBudget(allowance, start, end, dailyLimit);
+        db.saveBudget(userId, allowance, start, end, dailyLimit);
     }
 
     // Sequence: get safe Daily Limit
@@ -63,9 +63,8 @@ public class BudgetManager {
         return (totalSpent/totalBudget)*100 +"%";
     }
     
-    public void resetCycle(int userID){
+     public void resetCycle(int userID) {
         transactionManager.deleteAllTransactions(userID);
         notificationService.showNotification("Reset Done Successfully");
-        
     }
 }

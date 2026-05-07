@@ -1,5 +1,7 @@
 package com.masroofy.service;
 
+import java.util.List;
+
 import com.masroofy.dao.SQLiteDatabase;
 
 // Service Layer - Business Logic
@@ -7,9 +9,12 @@ public class TransactionManager {
 
     SQLiteDatabase db = SQLiteDatabase.getInstance();
 
-    // Sequence: addExpense → saveTransaction
-    public void addExpense(double amount, int category) {
-        db.saveTransaction(amount, category, "2026-04-30");
+   
+    public void addExpense(int userId, double amount, int category, String date) {
+        db.saveTransaction(userId, amount, category, date);
+    }
+     public List<String[]> getAllTransactions(int userId) {
+        return db.getAllTransactions(userId);
     }
 
     // Sequence: Edit Transaction
