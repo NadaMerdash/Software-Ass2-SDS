@@ -4,16 +4,7 @@ import java.util.Date;
 
 public class InputValidation {
     NotificationService notificationService= new NotificationService();
-
-    public void submit(double Allowance, Date startDate, Date endDate) {
-        if (validate(Allowance, startDate, endDate)) {
-            notificationService.showNotification("Input is valid. Budget Cycle created successfully.");
-        }
-        else {
-            notificationService.showError("Input is invalid. Please try again.");
-        }
-    }
-
+    
     public boolean validate(double Allowance, Date startDate, Date endDate) {
         if (Allowance <= 0) {
             notificationService.showError("Allowance must be a positive number.");

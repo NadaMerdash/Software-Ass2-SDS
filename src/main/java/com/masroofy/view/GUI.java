@@ -238,7 +238,7 @@ public class GUI extends JFrame {
         add  .addActionListener(e -> openAddExpenseDialog());
         edit .addActionListener(e -> editTransaction());
         del  .addActionListener(e -> deleteTransaction());
-        reset.addActionListener(e -> handleReset());
+        reset.addActionListener(e -> ResetClick());
         dash .addActionListener(e -> openDashboard());
         p.add(save); p.add(add);  p.add(edit);
         p.add(del);  p.add(reset); p.add(dash);
@@ -332,11 +332,6 @@ public class GUI extends JFrame {
         dlg.add(actions, BorderLayout.SOUTH);
         dlg.setVisible(true);
     }
-
-    private void showErr(String msg) {
-        JOptionPane.showMessageDialog(this, msg, "Error", JOptionPane.ERROR_MESSAGE);
-    }
-
     private JButton btn(String t, Color c) {
         JButton b = new JButton(t);
         b.setBackground(c);
@@ -347,15 +342,13 @@ public class GUI extends JFrame {
      public void openAddExpenseDialog() {
         JDialog dlg = makeDialog("Add Expense", 400, 255);
         JPanel form = dialogForm();
-
         JTextField amountField = styledField();
         JComboBox<String> catCombo = styledCombo(); 
-
         form.add(makeFieldBlock("Amount", amountField));
         form.add(Box.createVerticalStrut(10));
         form.add(makeFieldBlock("Category", catCombo));
 
-        JButton ok     = btn("Add",    ACCENT_GREEN);
+        JButton ok = btn("Add",    ACCENT_GREEN);
         JButton cancel = btn("Cancel", new Color(148, 163, 184));
 
         ok.addActionListener(e -> {
@@ -363,13 +356,16 @@ public class GUI extends JFrame {
                 double amount = Double.parseDouble(amountField.getText().trim());
                 int catId     = catCombo.getSelectedIndex() + 1; // 1-based
                 if (!validation.validateExpense(amount, catId)) {
-                    showErr("Invalid input."); return;
+                    JOptionPane.showMessageDialog(
+                        dlg, notification.showError("Invalid input."), "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
                 controller.addExpense(amount, catId);
-                JOptionPane.showMessageDialog(dlg, "Expense added!", "Success",
+                JOptionPane.showMessageDialog(
+                    dlg, notification.showNotification("Expense added!"), "Success",
                     JOptionPane.INFORMATION_MESSAGE);
                 dlg.dispose();
-            } catch (NumberFormatException ex) { showErr("Amount must be a number."); }
+            } catch (NumberFormatException ex) { JOptionPane.showMessageDialog(dlg, notification.showError("Amount must be a number."), "Error", JOptionPane.ERROR_MESSAGE); }
         });
         cancel.addActionListener(e -> dlg.dispose());
 
@@ -379,7 +375,7 @@ public class GUI extends JFrame {
      public void editTransaction() {
         List<String[]> txns = controller.getAllTransactions();
         if (txns.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No transactions found.", "Info",
+            JOptionPane.showMessageDialog(this, notification.showNotification("No transactions found."), "Info",
                 JOptionPane.INFORMATION_MESSAGE);
             return;
         }
@@ -388,7 +384,7 @@ public class GUI extends JFrame {
         JComboBox<String> txnCombo = new JComboBox<>();
         applyComboStyle(txnCombo);
         for (String[] t : txns)
-            txnCombo.addItem("ID:" + t[0] + "  |  " + t[1] + " SAR  |  " + t[2] + "  |  " + t[3]);
+        txnCombo.addItem("ID:" + t[0] + "  |  " + t[1] + "   |  " + t[2] + "  |  " + t[3]);
         JTextField amountField = styledField();
         JComboBox<String> catCombo = styledCombo();
         form.add(makeFieldBlock("Select Transaction", txnCombo));
@@ -396,7 +392,7 @@ public class GUI extends JFrame {
         form.add(makeFieldBlock("New Amount", amountField));
         form.add(Box.createVerticalStrut(10));
         form.add(makeFieldBlock("New Category", catCombo));
-        JButton ok     = btn("Save",   DARK);
+        JButton ok = btn("Save",   DARK);
         JButton cancel = btn("Cancel", new Color(148, 163, 184));
         ok.addActionListener(e -> {
             try {
@@ -405,13 +401,18 @@ public class GUI extends JFrame {
                 double amount = Double.parseDouble(amountField.getText().trim());
                 int catId     = catCombo.getSelectedIndex() + 1;
                 if (!validation.validateExpense(amount, catId)) {
-                    showErr("Invalid input."); return;
+                    JOptionPane.showMessageDialog(
+                    dlg, notification.showError("Invalid input."), "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
                 controller.editTransaction(txnId, amount, catId);
-                JOptionPane.showMessageDialog(dlg, "Transaction updated!", "Success",
+                JOptionPane.showMessageDialog(
+                    dlg, notification.showNotification("Transaction updated!"), "Success",
                     JOptionPane.INFORMATION_MESSAGE);
                 dlg.dispose();
-            } catch (NumberFormatException ex) { showErr("Amount must be a number."); }
+            } catch (NumberFormatException ex) 
+            { 
+             JOptionPane.showMessageDialog(dlg, notification.showError("Amount must be a number."), "Error", JOptionPane.ERROR_MESSAGE); }
         });
         cancel.addActionListener(e -> dlg.dispose());
         finishDialog(dlg, form, cancel, ok);
@@ -419,7 +420,7 @@ public class GUI extends JFrame {
      public void deleteTransaction() {
         List<String[]> txns = controller.getAllTransactions();
         if (txns.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No transactions found.", "Info",
+            JOptionPane.showMessageDialog(this, notification.showNotification("No transactions found."), "Info",
                 JOptionPane.INFORMATION_MESSAGE);
             return;
         }
@@ -428,9 +429,9 @@ public class GUI extends JFrame {
         JComboBox<String> txnCombo = new JComboBox<>();
         applyComboStyle(txnCombo);
         for (String[] t : txns)
-        txnCombo.addItem("ID:" + t[0] + "  |  " + t[1] + " SAR  |  " + t[2] + "  |  " + t[3]);
+            txnCombo.addItem("ID:" + t[0] + "  |  " + t[1] + "   |  " + t[2] + "  |  " + t[3]);
         form.add(makeFieldBlock("Select Transaction to Delete", txnCombo));
-        JButton del    = btn("Delete", ACCENT_RED);
+        JButton del = btn("Delete", ACCENT_RED);
         JButton cancel = btn("Cancel", new Color(148, 163, 184));
         del.addActionListener(e -> {
             int idx   = txnCombo.getSelectedIndex();
@@ -440,7 +441,7 @@ public class GUI extends JFrame {
                 "Confirm", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
             if (confirm == JOptionPane.YES_OPTION) {
                 controller.deleteTransaction(txnId);
-                JOptionPane.showMessageDialog(dlg, "Deleted.", "Success",
+                JOptionPane.showMessageDialog(dlg, notification.showNotification("Deleted."), "Success",
                     JOptionPane.INFORMATION_MESSAGE);
                 dlg.dispose();
             }
@@ -448,24 +449,29 @@ public class GUI extends JFrame {
         cancel.addActionListener(e -> dlg.dispose());
         finishDialog(dlg, form, cancel, del);
     }
-     public void handleReset() {
+     public void ResetClick() {
         String pinInput = JOptionPane.showInputDialog(this,
-            "Enter your PIN to confirm reset:", "Reset", JOptionPane.WARNING_MESSAGE);
+          notification.showNotification("Enter your PIN to confirm reset:"), "Reset", JOptionPane.WARNING_MESSAGE);
         if (pinInput == null) return;
         int pin;
         try { pin = Integer.parseInt(pinInput.trim()); }
-        catch (NumberFormatException e) { showErr("PIN must be a number."); return; }
+        catch (NumberFormatException e) { 
+            JOptionPane.showMessageDialog( this, notification.showError("PIN must be a number."),
+     "Error",JOptionPane.ERROR_MESSAGE);
+     return; }
+
         int storedPin = controller.getStoredPin();
         if (!validation.ValidateReset(controller.getCurrentUserId(), pin, storedPin)) {
-            showErr("Incorrect PIN. Reset cancelled.");
+            JOptionPane.showMessageDialog(this, notification.showError("Incorrect PIN. Reset cancelled."), "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
+
         int confirm = JOptionPane.showConfirmDialog(this,
-            "All your transactions will be deleted. Continue?",
+            notification.showConfirmationMessage("All your transactions will be deleted. Continue?"),
             "Confirm Reset", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         if (confirm == JOptionPane.YES_OPTION) {
             controller.resetCycle();
-            JOptionPane.showMessageDialog(this, "Reset complete. All transactions cleared.",
+            JOptionPane.showMessageDialog(this, notification.showNotification("Reset complete. All transactions cleared."),
                 "Done", JOptionPane.INFORMATION_MESSAGE);
         }
     }
@@ -476,20 +482,19 @@ public class GUI extends JFrame {
         String endTxt   = endDateField.getText().trim();
 
         if (allowTxt.isEmpty() || startTxt.isEmpty() || endTxt.isEmpty()) {
-            showErr("Please fill in all budget fields.");
+            JOptionPane.showMessageDialog(this, notification.showError("Please fill in all budget fields."), "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
         double allowance;
         try { allowance = Double.parseDouble(allowTxt); }
-        catch (NumberFormatException ex) { showErr("Allowance must be a number."); return; }
+        catch (NumberFormatException ex) { JOptionPane.showMessageDialog(this, notification.showError("Allowance must be a number."), "Error", JOptionPane.ERROR_MESSAGE); return; }
 
-        if (allowance <= 0) { showErr("Allowance must be greater than zero."); return; }
+        if (allowance <= 0) { JOptionPane.showMessageDialog(this, notification.showError("Allowance must be greater than zero."), "Error", JOptionPane.ERROR_MESSAGE); return; }
 
         controller.createBudget(allowance, startTxt, endTxt);
-        JOptionPane.showMessageDialog(this, "Budget saved!", "Success",
+        JOptionPane.showMessageDialog(this, notification.showNotification("Budget saved!"), "Success",
             JOptionPane.INFORMATION_MESSAGE);
     }
-
     public void openDashboard() {
 
 }

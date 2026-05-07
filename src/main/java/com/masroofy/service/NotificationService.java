@@ -1,16 +1,18 @@
 package com.masroofy.service;
 
 public class NotificationService {
-    public void showNotification(String message) {
+    public String showNotification(String message) {
         System.out.println("Notification: " + message);
+        return "Notification: " + message;
     }
 
-    public boolean showConfirmationMessage(String message) {
+    public String showConfirmationMessage(String message) {
         System.out.println("Confirmation: " + message);
-       return true;
+        return "Confirmation: " + message;
     }
 
-    public void showError(String message) {
+    public String showError(String message) {
         System.err.println("Error: " + message);
+        return "Error: " + message;
     }
 }
