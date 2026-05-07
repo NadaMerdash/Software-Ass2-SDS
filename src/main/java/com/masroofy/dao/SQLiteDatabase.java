@@ -209,6 +209,21 @@ public class SQLiteDatabase {
         }
     }
 
+    public double getAllowance(int userId) {
+    String sql = "SELECT allowance FROM budget_cycle WHERE user_id = ?"; 
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, userId);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getDouble("allowance");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return 0; 
+    }
+
     public int deleteAllTransactions(int userID) {
         String sql = "DELETE FROM transactions WHERE user_id=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {

@@ -237,7 +237,7 @@ public class GUI extends JFrame {
         edit .addActionListener(e -> editTransaction());
         del  .addActionListener(e -> deleteTransaction());
         reset.addActionListener(e -> ResetClick());
-        dash .addActionListener(e -> openDashboard());
+        dash .addActionListener(e -> openDashboard(controller.getCurrentUserId()));
         p.add(save); p.add(add);  p.add(edit);
         p.add(del);  p.add(reset); p.add(dash);
         return p;
@@ -457,13 +457,11 @@ public class GUI extends JFrame {
             JOptionPane.showMessageDialog( this, controller.showError("PIN must be a number."),
      "Error",JOptionPane.ERROR_MESSAGE);
      return; }
-
         int storedPin = controller.getStoredPin();
         if (!controller.validateReset(controller.getCurrentUserId(), pin, storedPin)) {
             JOptionPane.showMessageDialog(this, controller.showError("Incorrect PIN. Reset cancelled."), "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
-
         int confirm = JOptionPane.showConfirmDialog(this,
             controller.showConfirmationMessage("All your transactions will be deleted. Continue?"),
             "Confirm Reset", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
@@ -497,7 +495,6 @@ public class GUI extends JFrame {
             "Error", JOptionPane.ERROR_MESSAGE);
         return;
     }
-
     if (!controller.validate(allowance, startDate, endDate)) {
         JOptionPane.showMessageDialog(this, controller.showError("Invalid budget details."), "Error", JOptionPane.ERROR_MESSAGE);
         return;
@@ -506,7 +503,10 @@ public class GUI extends JFrame {
     JOptionPane.showMessageDialog(this,controller.showNotification("Budget saved!"),
         "Success",JOptionPane.INFORMATION_MESSAGE);
 }
-    public void openDashboard() {
+    public void openDashboard(int userId) {
+       Dashboard dash = new Dashboard(userId, this);
+        dash.setVisible(true);
+        this.setVisible(false);
 
 }
     private double parseDouble(String t) {
