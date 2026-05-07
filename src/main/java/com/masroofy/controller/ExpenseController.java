@@ -8,6 +8,7 @@ import com.masroofy.service.BudgetManager;
 import com.masroofy.service.InputValidation;
 import com.masroofy.service.NotificationService;
 import com.masroofy.service.TransactionManager;
+import com.masroofy.model.Transaction;
 
 // Controller Layer
 public class ExpenseController {
@@ -41,14 +42,32 @@ public class ExpenseController {
     }
 
     public void addExpense(double amount, int category) {
-        String today = java.time.LocalDate.now().toString();
-        tm.addExpense(currentUserId, amount, category, today);
-    }
 
+    String today = java.time.LocalDate.now().toString();
 
-    public void editTransaction(int id, double amount, int category) {
-        tm.editTransaction(id, amount, category);
-    }
+    Transaction transaction =
+            new Transaction(currentUserId, amount, category, today);
+
+    tm.addExpense(transaction);
+}
+
+    public void editTransaction(int transactionId,
+                            double amount,
+                            int category) {
+
+    String today = java.time.LocalDate.now().toString();
+
+    Transaction transaction =
+            new Transaction(
+                    transactionId,
+                    currentUserId,
+                    amount,
+                    category,
+                    today
+            );
+
+    tm.editTransaction(transaction);
+}
 
     public void deleteTransaction(int id) {
         tm.deleteTransaction(id);

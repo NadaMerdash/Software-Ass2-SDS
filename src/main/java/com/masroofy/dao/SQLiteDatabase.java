@@ -10,6 +10,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.masroofy.model.Transaction;
 
 // DAO : Handles all DB operations
 public class SQLiteDatabase {
@@ -166,14 +167,16 @@ public class SQLiteDatabase {
 
     // ===================== Transactions =====================
 
-   public int saveTransaction(int userId, double amount, int categoryId, String date) {
+   public int saveTransaction(Transaction transaction) {
         String sql =
             "INSERT INTO transactions(user_id, amount, category_id, date) VALUES (?,?,?,?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ps.setDouble(2, amount);
-            ps.setInt(3, categoryId);
-            ps.setString(4, date);
+            
+            ps.setInt(1, transaction.getUserId());
+            ps.setDouble(2, transaction.getAmount());
+            ps.setInt(3, transaction.getCategoryId());
+            ps.setString(4, transaction.getDate());
+            
             ps.executeUpdate();
             return 1;
         } catch (SQLException e) {
@@ -182,13 +185,13 @@ public class SQLiteDatabase {
         }
     }
 
-    public void updateTransaction(int id, double amount, int categoryId) {
+    public void updateTransaction(Transaction transaction) {
         String sql =
             "UPDATE transactions SET amount=?, category_id=? WHERE id=?";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setDouble(1, amount);
-            ps.setInt(2, categoryId);
-            ps.setInt(3, id);
+            ps.setDouble(1, transaction.getAmount());
+            ps.setInt(2, transaction.getCategoryId());
+            ps.setInt(3, transaction.getTransactionId());
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
