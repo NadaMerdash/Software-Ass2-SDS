@@ -14,6 +14,10 @@ public class InputValidation {
             notificationService.showError("Start date and end date cannot be null.");
             return false;
         }
+        if (startDate.after(endDate)) {
+            notificationService.showError("Start date must be before end date.");
+            return false;
+        }
         return true;
     }
 
