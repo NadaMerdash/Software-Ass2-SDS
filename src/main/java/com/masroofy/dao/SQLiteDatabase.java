@@ -40,35 +40,45 @@ public class SQLiteDatabase {
     // ===================== Create tables  =====================
      private void createTables() {
     try (Statement stmt = conn.createStatement()) {
-       
-stmt.execute("CREATE TABLE IF NOT EXISTS users (" +
-             "id INTEGER PRIMARY KEY, " +
-             "pin INTEGER NOT NULL, " +
-             "sorted_pin INTEGER NOT NULL);");
+         stmt.execute("""
+                CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY,
+                    pin INTEGER NOT NULL,
+                    sorted_pin INTEGER NOT NULL
+                );
+            """);
 
-stmt.execute("CREATE TABLE IF NOT EXISTS transactions (" +
-             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-             "user_id INTEGER DEFAULT 1, " +
-             "amount REAL, " +
-             "category_id INTEGER, " +
-             "date TEXT);");
+            stmt.execute("""
+                CREATE TABLE IF NOT EXISTS transactions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER,
+                    amount REAL,
+                    category_id INTEGER,
+                    date TEXT
+                );
+            """);
 
-stmt.execute("CREATE TABLE IF NOT EXISTS budget_cycle (" +
-             "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-             "user_id INTEGER DEFAULT 1, " +
-             "allowance REAL, " +
-             "start_date TEXT, " +
-             "end_date TEXT, " +
-             "daily_limit REAL);");
+            stmt.execute("""
+                CREATE TABLE IF NOT EXISTS budget_cycle (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER,
+                    allowance REAL,
+                    start_date TEXT,
+                    end_date TEXT,
+                    daily_limit REAL
+                );
+            """);
 
-stmt.execute("CREATE TABLE IF NOT EXISTS category (" +
-             "id INTEGER PRIMARY KEY, " +
-             "name TEXT);");
-                     
-        System.out.println(" All tables are verified and ready!");
-    } catch (SQLException e) {
-        System.err.println(" Error creating tables: " + e.getMessage());
-    }
+            stmt.execute("""
+                CREATE TABLE IF NOT EXISTS category (
+                    id INTEGER PRIMARY KEY,
+                    name TEXT
+                );
+            """);
+            System.out.println("All tables ready!");
+        } catch (SQLException e) {
+            System.err.println("Error creating tables: " + e.getMessage());
+        }
 }
 
     private void migrateSchema() {
