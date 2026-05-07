@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.masroofy.model.Transaction;
+import com.masroofy.model.Budget;
 
 // DAO : Handles all DB operations
 public class SQLiteDatabase {
@@ -261,15 +262,17 @@ public class SQLiteDatabase {
 
     //  BUDGET 
 
-   public void saveBudget(int userId, double allowance, String start, String end, double dailyLimit) {
+   public void saveBudget(Budget budget) {
         String sql =
             "INSERT INTO budget_cycle(user_id,allowance,start_date,end_date,daily_limit) VALUES(?,?,?,?,?)";
         try (PreparedStatement ps = conn.prepareStatement(sql)) {
-            ps.setInt(1, userId);
-            ps.setDouble(2, allowance);
-            ps.setString(3, start);
-            ps.setString(4, end);
-            ps.setDouble(5, dailyLimit);
+            
+            ps.setInt(1, budget.getUserID());
+            ps.setDouble(2, budget.getAllowance());
+            ps.setString(3, budget.getStartDate());
+            ps.setString(4, budget.getEndDate());
+            ps.setDouble(5, budget.getDailyLimit());
+            
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

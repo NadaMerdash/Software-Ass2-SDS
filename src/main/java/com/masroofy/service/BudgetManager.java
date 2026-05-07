@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 
 import com.masroofy.dao.SQLiteDatabase;
+import com.masroofy.model.Budget;
 
 // Service Layer
 public class BudgetManager {
@@ -32,10 +33,11 @@ public class BudgetManager {
     }
 
     // Sequence: Create Budget
-     public void createBudget(int userId, double allowance, String start, String end) {
+     public void createBudget(int userID, double allowance, String start, String end) {
         long days = calculateDaysBetween(start, end);
         double dailyLimit = calculateSafeDailyLimit(allowance, days);
-        db.saveBudget(userId, allowance, start, end, dailyLimit);
+        Budget budget = new Budget(userID, allowance, start, end, dailyLimit);
+        db.saveBudget(budget);
     }
 
     // Sequence: get safe Daily Limit
