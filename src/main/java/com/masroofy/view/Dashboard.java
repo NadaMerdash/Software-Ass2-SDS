@@ -20,6 +20,17 @@ import javax.swing.border.EmptyBorder;
 
 import com.masroofy.controller.ExpenseController;
 
+/**
+ * Dashboard view for displaying budget information and recent transactions.
+ * <p>
+ * This class provides a graphical interface for viewing the user's budget overview,
+ * including safe daily limit, remaining balance, remaining days, and spending percentage,
+ * along with a list of recent transactions.
+ * </p>
+ *
+ * @author Nada
+ * @version 1.0
+ */
 public class Dashboard extends JFrame {
 
     private JLabel limitLabel;
@@ -31,7 +42,18 @@ public class Dashboard extends JFrame {
     private int currentUserId;
     private GUI home;
     
-    private ExpenseController controller ;
+    private ExpenseController controller;
+
+    /**
+     * Constructs a Dashboard window for a specific user.
+     * <p>
+     * Initializes the dashboard UI with budget information and transaction list.
+     * </p>
+     *
+     * @param userId the ID of the user
+     * @param home the parent GUI window
+     * @param controller the expense controller for data access
+     */
     public Dashboard(int userId, GUI home, ExpenseController controller) {
         this.currentUserId = userId;
         this.home = home;
@@ -106,6 +128,13 @@ public class Dashboard extends JFrame {
         setVisible(true);
     }
 
+    /**
+     * Loads budget data and transactions from the controller and updates the display.
+     * <p>
+     * Retrieves safe daily limit, remaining balance, remaining days, spending percentage,
+     * and transaction list, then updates all labels and the transaction list panel.
+     * </p>
+     */
     private void loadData() {
         double safeLimit = controller.getSafeDailyLimit();
         double balance = controller.getRemainingBalance();
@@ -120,6 +149,12 @@ public class Dashboard extends JFrame {
         refreshTransactions();
     }
 
+    /**
+     * Refreshes the transaction list display.
+     * <p>
+     * Clears the current transaction list and reloads all transactions from the controller.
+     * </p>
+     */
     public void refreshTransactions() {
         listPanel.removeAll();
         List<String[]> transactions = controller.getAllTransactions();
@@ -129,6 +164,17 @@ public class Dashboard extends JFrame {
         listPanel.revalidate();
         listPanel.repaint();
     }
+
+    /**
+     * Adds a transaction item to the transaction list display.
+     * <p>
+     * Creates a panel with date, amount, and category information for a single transaction.
+     * </p>
+     *
+     * @param date the transaction date
+     * @param amount the transaction amount with currency
+     * @param category the transaction category
+     */
     private void addTransactionItem(String date, String amount, String category) {
         JPanel item = new JPanel(new BorderLayout());
         item.setMaximumSize(new Dimension(440, 40));
@@ -139,6 +185,12 @@ public class Dashboard extends JFrame {
         listPanel.add(item);
     }
 
+    /**
+     * Refreshes the entire dashboard display.
+     * <p>
+     * Reloads all budget information and transactions.
+     * </p>
+     */
     public void refreshDashboard() {
         loadData();
     }
