@@ -14,3 +14,22 @@
     
     6- Learn how to document code and to use GitHub as a repository for the project.
     
+## Used Tools
+
+* draw.io
+
+* Swing
+
+## files structure
+
+The project is structured following the MVC pattern
+
+* Model: Represents the data (Users, Expenses, Budgets) such as Transaction().
+
+* View: Displays data and takes user input using Java Swing GUI components (JFrame) such as GUI() and Dashboard().
+
+* Controller:Receives requests and forwards them such as ExpenseController() .
+
+* Service: Contains business logic  such as BudgetManager(), TransactionManager().
+
+* DAO: Stores and retrieves data from database such as SQLiteDatabase
