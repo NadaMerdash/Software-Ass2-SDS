@@ -4,11 +4,11 @@ import java.util.Date;
 import java.util.List;
 
 import com.masroofy.dao.SQLiteDatabase;
+import com.masroofy.model.Transaction;
 import com.masroofy.service.BudgetManager;
 import com.masroofy.service.InputValidation;
 import com.masroofy.service.NotificationService;
 import com.masroofy.service.TransactionManager;
-import com.masroofy.model.Transaction;
 
 // Controller Layer
 public class ExpenseController {
@@ -49,6 +49,7 @@ public class ExpenseController {
             new Transaction(currentUserId, amount, category, today);
 
     tm.addExpense(transaction);
+    bm.reCalculateSafeDailyLimit(currentUserId);
 }
 
     public void editTransaction(int transactionId,
@@ -67,10 +68,12 @@ public class ExpenseController {
             );
 
     tm.editTransaction(transaction);
+    bm.reCalculateSafeDailyLimit(currentUserId);
 }
 
     public void deleteTransaction(int id) {
         tm.deleteTransaction(id);
+        bm.reCalculateSafeDailyLimit(currentUserId);
     }
     public List<String[]> getAllTransactions() {
         return tm.getAllTransactions(currentUserId);
@@ -85,6 +88,7 @@ public class ExpenseController {
     }
      public void resetCycle() {
         bm.resetCycle(currentUserId);
+        bm.reCalculateSafeDailyLimit(currentUserId);
     }
 
       public double reCalculateSafeDailyLimit() {
@@ -112,4 +116,21 @@ public class ExpenseController {
         public String showConfirmationMessage(String message) {
             return notification.showConfirmationMessage(message);
         }
+        
+        public double getAllowance() {
+    return bm.getAllowance(currentUserId);
+}
+
+public double getRemainingBalance() {
+    return bm.getRemainingBalance(currentUserId);
+}
+
+public int getRemainingDays() {
+    return bm.getRemainingDays(currentUserId);
+}
+
+public String calculatePercentage() {
+    return bm.calculatePercentage(currentUserId,getAllowance());
+}
+
 }

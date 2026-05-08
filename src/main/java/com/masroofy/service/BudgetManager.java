@@ -42,21 +42,14 @@ public class BudgetManager {
 
     // Sequence: get safe Daily Limit
     public double getSafeDailyLimit(int userID) {
-        double balance = db.getRemainingBalance(userID);
-        int days = db.getRemainingDays(userID);
-
-        double safe = calculateSafeDailyLimit(balance, days);
-
-        db.saveSafeDailyLimit(safe);
-
-        return safe;
-    }
+    return db.getSafeDailyLimit(userID);
+}
     
     public double reCalculateSafeDailyLimit(int userID) {
         int days= db.getRemainingDays(userID);
         double balance = db.getRemainingBalance(userID);
         double newDailyLimit = calculateSafeDailyLimit(balance, days);
-        db.saveSafeDailyLimit(newDailyLimit);
+        db.saveSafeDailyLimit(newDailyLimit,userID);
         return newDailyLimit ;
     }
     
@@ -64,7 +57,16 @@ public class BudgetManager {
         double totalSpent= db.getTotalExpenses(userID);
         return (totalSpent/totalBudget)*100 +"%";
     }
-    
+        public double getRemainingBalance(int userID) {
+            return db.getRemainingBalance(userID);
+        }
+        public int getRemainingDays(int userID) {
+            return db.getRemainingDays(userID);
+        }
+        public double getAllowance(int userID) {
+            return db.getAllowance(userID);
+        }
+
      public void resetCycle(int userID) {
         transactionManager.deleteAllTransactions(userID);
         notificationService.showNotification("Reset Done Successfully");

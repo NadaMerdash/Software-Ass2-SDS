@@ -18,9 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
 
-import com.masroofy.dao.SQLiteDatabase;
-import com.masroofy.service.BudgetManager;
-import com.masroofy.service.TransactionManager;
+import com.masroofy.controller.ExpenseController;
 
 public class Dashboard extends JFrame {
 
@@ -32,14 +30,12 @@ public class Dashboard extends JFrame {
 
     private int currentUserId;
     private GUI home;
-
-    SQLiteDatabase db = SQLiteDatabase.getInstance();
-    BudgetManager budgetManager = new BudgetManager();
-    TransactionManager transactionManager = new TransactionManager();
-
-    public Dashboard(int userId, GUI home) {
+    
+    private ExpenseController controller ;
+    public Dashboard(int userId, GUI home, ExpenseController controller) {
         this.currentUserId = userId;
         this.home = home;
+        this.controller = controller;
 
         setTitle("Dashboard");
         setSize(460, 610);
@@ -111,12 +107,11 @@ public class Dashboard extends JFrame {
     }
 
     private void loadData() {
-        double safeLimit = budgetManager.getSafeDailyLimit(currentUserId);
-        double balance = db.getRemainingBalance(currentUserId);
-        int days = db.getRemainingDays(currentUserId);
-        double totalBudget = db.getAllowance(currentUserId);
-        String percent = budgetManager.calculatePercentage(currentUserId, totalBudget);
-
+        double safeLimit = controller.getSafeDailyLimit();
+        double balance = controller.getRemainingBalance();
+        int days = controller.getRemainingDays();
+        double totalBudget = controller.getAllowance();
+        String percent = controller.calculatePercentage();
         limitLabel.setText("Safe Daily Limit: " + String.format("%.2f", safeLimit) + " EGP");
         balanceLabel.setText("Remaining Balance: " + String.format("%.2f", balance) + " EGP");
         daysLabel.setText("Remaining Days: " + days + " Days");
@@ -127,7 +122,7 @@ public class Dashboard extends JFrame {
 
     public void refreshTransactions() {
         listPanel.removeAll();
-        List<String[]> transactions = transactionManager.getAllTransactions(currentUserId);
+        List<String[]> transactions = controller.getAllTransactions();
         for (String[] t : transactions) {
             addTransactionItem(t[3], t[1] + " EGP", t[2]);
         }
@@ -141,7 +136,6 @@ public class Dashboard extends JFrame {
         item.add(new JLabel(" " + date), BorderLayout.WEST);
         item.add(new JLabel(amount + "   "), BorderLayout.EAST);
         item.add(new JLabel(category, SwingConstants.CENTER), BorderLayout.CENTER);
-
         listPanel.add(item);
     }
 

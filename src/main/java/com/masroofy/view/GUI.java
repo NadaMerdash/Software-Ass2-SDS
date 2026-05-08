@@ -504,7 +504,7 @@ public class GUI extends JFrame {
         "Success",JOptionPane.INFORMATION_MESSAGE);
 }
     public void openDashboard(int userId) {
-       Dashboard dash = new Dashboard(userId, this);
+       Dashboard dash = new Dashboard(userId, this, controller);
         dash.setVisible(true);
         this.setVisible(false);
 

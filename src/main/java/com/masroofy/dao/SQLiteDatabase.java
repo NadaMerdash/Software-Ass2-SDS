@@ -10,8 +10,8 @@ import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.masroofy.model.Transaction;
 import com.masroofy.model.Budget;
+import com.masroofy.model.Transaction;
 
 // DAO : Handles all DB operations
 public class SQLiteDatabase {
@@ -328,6 +328,21 @@ public class SQLiteDatabase {
         return 0;
     }
 
+    public double getSafeDailyLimit(int userId) {
+    String sql = "SELECT daily_limit FROM budget_cycle WHERE user_id=? ORDER BY id DESC LIMIT 1";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setInt(1, userId);
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getDouble("daily_limit");
+            }
+        }
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
+    return 0;
+}
+
     public int getRemainingDays(int userId) {
         String sql =
             "SELECT start_date, end_date FROM budget_cycle WHERE user_id=? ORDER BY id DESC LIMIT 1";
@@ -350,7 +365,15 @@ public class SQLiteDatabase {
         }
         return 0;
     }
-    public void saveSafeDailyLimit(double limit) {
-        System.out.println("Safe Daily Limit: " + limit);
+    
+    public void saveSafeDailyLimit(double limit, int userId) {
+    String sql = "UPDATE budget_cycle SET daily_limit=? WHERE user_id=?";
+    try (PreparedStatement ps = conn.prepareStatement(sql)) {
+        ps.setDouble(1, limit);
+        ps.setInt(2, userId);
+        ps.executeUpdate();
+    } catch (SQLException e) {
+        e.printStackTrace();
     }
+}
 }
