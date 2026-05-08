@@ -9,8 +9,8 @@ import com.masroofy.model.Budget;
 
 /**
  * Handles all budget-related business logic in the Masroofy system.
- * Responsible for creating budgets, calculating daily limits,
- * remaining balance, remaining days, and spending percentage.
+ * Responsible for budget creation, daily limit calculation,
+ * remaining balance, remaining days, and budget reset operations.
  */
 public class BudgetManager {
 
@@ -19,7 +19,7 @@ public class BudgetManager {
     private NotificationService notificationService = new NotificationService();
 
     /**
-     * Calculates the number of days between two dates.
+     * Calculates number of days between two dates.
      *
      * @param firstDate start date in format yyyy-MM-dd
      * @param lastDate end date in format yyyy-MM-dd
@@ -31,13 +31,15 @@ public class BudgetManager {
         LocalDate startDate = LocalDate.parse(firstDate, formatter);
         LocalDate endDate = LocalDate.parse(lastDate, formatter);
 
-        return ChronoUnit.DAYS.between(startDate, endDate);
+        long daysBetween = ChronoUnit.DAYS.between(startDate, endDate);
+
+        return daysBetween;
     }
 
     /**
-     * Calculates the safe daily spending limit.
+     * Calculates safe daily spending limit.
      *
-     * @param allowance total budget allowance
+     * @param allowance total budget amount
      * @param days number of days in budget period
      * @return safe daily limit
      */
@@ -47,22 +49,23 @@ public class BudgetManager {
     }
 
     /**
-     * Creates a new budget cycle for a user.
+     * Creates a new budget for a user.
      *
      * @param userID user identifier
-     * @param allowance total budget amount
+     * @param allowance total budget allowance
      * @param start start date
      * @param end end date
      */
     public void createBudget(int userID, double allowance, String start, String end) {
         long days = calculateDaysBetween(start, end);
         double dailyLimit = calculateSafeDailyLimit(allowance, days);
+
         Budget budget = new Budget(userID, allowance, start, end, dailyLimit);
         db.saveBudget(budget);
     }
 
     /**
-     * Gets the stored safe daily limit for a user.
+     * Retrieves stored safe daily limit for a user.
      *
      * @param userID user identifier
      * @return safe daily limit
@@ -72,7 +75,7 @@ public class BudgetManager {
     }
 
     /**
-     * Recalculates the safe daily limit based on remaining balance and days.
+     * Recalculates safe daily limit based on remaining balance and days.
      *
      * @param userID user identifier
      * @return updated safe daily limit
@@ -82,7 +85,7 @@ public class BudgetManager {
         double balance = db.getRemainingBalance(userID);
 
         double newDailyLimit = calculateSafeDailyLimit(balance, days);
-        db.saveSafeDailyLimit(newDailyLimit);
+        db.saveSafeDailyLimit(newDailyLimit, userID);
 
         return newDailyLimit;
     }
@@ -100,7 +103,7 @@ public class BudgetManager {
     }
 
     /**
-     * Gets remaining balance for a user.
+     * Gets remaining balance for user.
      *
      * @param userID user identifier
      * @return remaining balance
@@ -120,7 +123,7 @@ public class BudgetManager {
     }
 
     /**
-     * Gets total allowance for a user.
+     * Gets total allowance for user.
      *
      * @param userID user identifier
      * @return total allowance
@@ -130,7 +133,7 @@ public class BudgetManager {
     }
 
     /**
-     * Resets the budget cycle by deleting all transactions.
+     * Resets budget cycle by deleting all transactions.
      *
      * @param userID user identifier
      */
