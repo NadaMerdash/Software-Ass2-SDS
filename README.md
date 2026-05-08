@@ -35,7 +35,9 @@ The project is structured following the MVC pattern
 * DAO: Stores and retrieves data from database such as SQLiteDatabase
 
 ## Graphical User Interface
-<img width="551" height="747" alt="1000340198" src="https://github.com/user-attachments/assets/d4ef6bf3-9917-401b-a804-6a3376285051" />
 
 
-<img width="552" height="742" alt="1000340200" src="https://github.com/user-attachments/assets/6efb07c8-cb89-4e54-963a-ffb779b3edbe" />
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/d4ef6bf3-9917-401b-a804-6a3376285051" width="45%" />
+  <img src="https://github.com/user-attachments/assets/6efb07c8-cb89-4e54-963a-ffb779b3edbe" width="45%" />
+</p>
