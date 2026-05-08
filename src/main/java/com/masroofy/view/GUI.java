@@ -29,6 +29,18 @@ import javax.swing.border.EmptyBorder;
 
 import com.masroofy.controller.ExpenseController;
 
+/**
+ * Main GUI window for the Masroofy budget management application.
+ * <p>
+ * Provides a comprehensive interface for user authentication, budget management,
+ * and expense tracking. Uses CardLayout to switch between login and main screens.
+ * Includes dialogs for adding, editing, and deleting transactions, plus budget
+ * creation and cycle reset functionality.
+ * </p>
+ *
+ * @author Nada
+ * @version 1.0
+ */
 public class GUI extends JFrame {
     private static final Color BG_WHITE= Color.WHITE;
     private static final Color SURFACE= new Color(248, 249, 252);
@@ -44,24 +56,30 @@ public class GUI extends JFrame {
     private static final Color ACCENT_BLUE  = new Color(59, 130, 246);
     private static final Font FONT_SUB = new Font("Segoe UI", Font.PLAIN, 12);
 
-     private JTextField loginUserIdField;
+    private JTextField loginUserIdField;
     private JPasswordField loginPinField;
     private JLabel loginStatusLabel;
     private JTextField allowanceField;
     private JTextField startDateField;
     private JTextField endDateField;
     private final ExpenseController controller = new ExpenseController();
- 
 
     private static final String[] CATEGORY_NAMES = {
         "1 - Food", "2 - Transport", "3 - Entertainment",
         "4 - Shopping", "5 - Health", "6 - Education", "7 - Other"
     };
 
-     private CardLayout cardLayout;
+    private CardLayout cardLayout;
     private JPanel mainContainer;
-     private JLabel welcomeLabel;
+    private JLabel welcomeLabel;
 
+    /**
+     * Constructs the main GUI window.
+     * <p>
+     * Initializes the window with CardLayout for switching between login and main screens.
+     * Starts with the login panel displayed.
+     * </p>
+     */
     public GUI() {
         setTitle("Masroofy");
         setSize(460, 610);
@@ -69,7 +87,7 @@ public class GUI extends JFrame {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
         setResizable(true);
-         cardLayout = new CardLayout();
+        cardLayout = new CardLayout();
         mainContainer = new JPanel(cardLayout);
 
         mainContainer.add(buildMainPanel(),  "MAIN");
@@ -77,9 +95,18 @@ public class GUI extends JFrame {
         add(mainContainer);
         cardLayout.show(mainContainer, "LOGIN"); 
         setVisible(true);
-        }
+    }
 
-     private JPanel buildLoginPanel() {
+    /**
+     * Builds the login/registration panel.
+     * <p>
+     * Creates a styled card with User ID and PIN input fields,
+     * plus a login/register button with validation feedback.
+     * </p>
+     *
+     * @return the configured login panel
+     */
+    private JPanel buildLoginPanel() {
         JPanel outer = new JPanel(new GridBagLayout());
         outer.setBackground(SURFACE);
         JPanel card = new JPanel();
@@ -99,7 +126,6 @@ public class GUI extends JFrame {
         sub.setForeground(TEXT_MUTED);
         sub.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-       
         loginUserIdField = styledField();
         loginPinField    = new JPasswordField();
         applyFieldStyle(loginPinField);
@@ -135,6 +161,13 @@ public class GUI extends JFrame {
         return outer;
     }
 
+    /**
+     * Handles login/registration button action.
+     * <p>
+     * Validates input format, attempts authentication/registration,
+     * and displays appropriate error messages or switches to main panel.
+     * </p>
+     */
     private void handleLogin() {
         String userIdText = loginUserIdField.getText().trim();
         String pinText    = new String(loginPinField.getPassword()).trim();
@@ -169,12 +202,25 @@ public class GUI extends JFrame {
         }
     }
 
+    /**
+     * Sets and displays a login error message.
+     *
+     * @param msg the error message to display
+     */
     private void setLoginError(String msg) {
         loginStatusLabel.setText("  " + msg);
         loginStatusLabel.setForeground(ACCENT_RED);
     }
 
-     private JPanel buildHeader() {
+    /**
+     * Builds the application header panel.
+     * <p>
+     * Creates the title and welcome message display area.
+     * </p>
+     *
+     * @return the configured header panel
+     */
+    private JPanel buildHeader() {
         JPanel p = new JPanel();
         p.setBackground(BG_WHITE);
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
@@ -193,7 +239,15 @@ public class GUI extends JFrame {
         return p;
     }
 
-     private JPanel buildMainPanel() {
+    /**
+     * Builds the main application panel.
+     * <p>
+     * Assembles header, form fields, and action buttons into the main interface.
+     * </p>
+     *
+     * @return the configured main panel
+     */
+    private JPanel buildMainPanel() {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(BG_WHITE);
         panel.add(buildHeader(), BorderLayout.NORTH);
@@ -202,6 +256,14 @@ public class GUI extends JFrame {
         return panel;
     }
 
+    /**
+     * Builds the form panel with budget input fields.
+     * <p>
+     * Creates input fields for allowance, start date, and end date.
+     * </p>
+     *
+     * @return the configured form panel
+     */
     private JPanel buildFormPanel() {
         JPanel p = new JPanel();
         p.setBackground(BG_WHITE);
@@ -221,6 +283,14 @@ public class GUI extends JFrame {
         return p;
     }
 
+    /**
+     * Builds the action buttons panel.
+     * <p>
+     * Creates six buttons for budget operations: Save, Add Expense, Edit, Delete, Reset, Dashboard.
+     * </p>
+     *
+     * @return the configured button panel
+     */
     private JPanel buildButtonPanel() {
         JPanel p = new JPanel(new GridLayout(2, 3, 10, 10));
         p.setBackground(BG_WHITE);
@@ -242,6 +312,13 @@ public class GUI extends JFrame {
         p.add(del);  p.add(reset); p.add(dash);
         return p;
     }
+
+    /**
+     * Creates a styled label for form fields.
+     *
+     * @param t the label text
+     * @return the configured JLabel
+     */
     private JLabel label(String t) {
         JLabel l = new JLabel(t);
         l.setFont(FONT_LABEL);
@@ -249,12 +326,18 @@ public class GUI extends JFrame {
         l.setAlignmentX(Component.LEFT_ALIGNMENT);
         return l;
     }
+
+    /**
+     * Creates a styled text input field.
+     *
+     * @return the configured JTextField
+     */
     private JTextField styledField() {
         JTextField f = new JTextField();
         f.setPreferredSize(new Dimension(200, 26));
         f.setMaximumSize(new Dimension(Integer.MAX_VALUE, 26));
         f.setFont(FONT_INPUT);
-        f. setMaximumSize(new Dimension(Integer.MAX_VALUE, 26));
+        f.setMaximumSize(new Dimension(Integer.MAX_VALUE, 26));
         f.setAlignmentX(Component.LEFT_ALIGNMENT);
         f.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(BORDER_COLOR),
@@ -263,6 +346,11 @@ public class GUI extends JFrame {
         return f;
     }
 
+    /**
+     * Applies styling to a text input field.
+     *
+     * @param f the field to style
+     */
     private void applyFieldStyle(JTextField f) {
         f.setPreferredSize(new Dimension(200, 28));
         f.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
@@ -274,12 +362,22 @@ public class GUI extends JFrame {
         ));
     }
 
+    /**
+     * Creates a styled combo box with category options.
+     *
+     * @return the configured JComboBox
+     */
     private JComboBox<String> styledCombo() {
         JComboBox<String> combo = new JComboBox<>(CATEGORY_NAMES);
         applyComboStyle(combo);
         return combo;
     }
 
+    /**
+     * Applies styling to a combo box.
+     *
+     * @param combo the combo box to style
+     */
     private void applyComboStyle(JComboBox<?> combo) {
         combo.setPreferredSize(new Dimension(200, 28));
         combo.setMaximumSize(new Dimension(Integer.MAX_VALUE, 28));
@@ -288,7 +386,14 @@ public class GUI extends JFrame {
         combo.setBackground(BG_WHITE);
     }
 
-     private JPanel makeFieldBlock(String labelText, JComponent field) {
+    /**
+     * Creates a labeled form field block.
+     *
+     * @param labelText the field label
+     * @param field the input component
+     * @return the configured field block panel
+     */
+    private JPanel makeFieldBlock(String labelText, JComponent field) {
         JPanel p = new JPanel();
         p.setLayout(new BoxLayout(p, BoxLayout.Y_AXIS));
         p.setBackground(BG_WHITE);
@@ -304,6 +409,14 @@ public class GUI extends JFrame {
         return p;
     }
 
+    /**
+     * Creates a dialog window with specified dimensions.
+     *
+     * @param title the dialog title
+     * @param w the dialog width
+     * @param h the dialog height
+     * @return the configured JDialog
+     */
     private JDialog makeDialog(String title, int w, int h) {
         JDialog dlg = new JDialog(this, title, true);
         dlg.setSize(w, h);
@@ -313,6 +426,11 @@ public class GUI extends JFrame {
         return dlg;
     }
 
+    /**
+     * Creates a form panel for dialogs.
+     *
+     * @return the configured form panel
+     */
     private JPanel dialogForm() {
         JPanel p = new JPanel();
         p.setBackground(BG_WHITE);
@@ -321,6 +439,14 @@ public class GUI extends JFrame {
         return p;
     }
 
+    /**
+     * Completes dialog setup by adding buttons and showing it.
+     *
+     * @param dlg the dialog to finalize
+     * @param form the form panel
+     * @param cancel the cancel button
+     * @param action the action button
+     */
     private void finishDialog(JDialog dlg, JPanel form, JButton cancel, JButton action) {
         JPanel actions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 8, 8));
         actions.setBackground(BG_WHITE);
@@ -330,6 +456,14 @@ public class GUI extends JFrame {
         dlg.add(actions, BorderLayout.SOUTH);
         dlg.setVisible(true);
     }
+
+    /**
+     * Creates a styled button with specified text and color.
+     *
+     * @param t the button text
+     * @param c the button background color
+     * @return the configured JButton
+     */
     private JButton btn(String t, Color c) {
         JButton b = new JButton(t);
         b.setBackground(c);
@@ -337,7 +471,14 @@ public class GUI extends JFrame {
         b.setFocusPainted(false);
         return b;
     }
-     public void openAddExpenseDialog() {
+
+    /**
+     * Opens a dialog for adding a new expense.
+     * <p>
+     * Prompts for expense amount and category, validates input, and adds to database.
+     * </p>
+     */
+    public void openAddExpenseDialog() {
         JDialog dlg = makeDialog("Add Expense", 400, 255);
         JPanel form = dialogForm();
         JTextField amountField = styledField();
@@ -352,7 +493,7 @@ public class GUI extends JFrame {
         ok.addActionListener(e -> {
             try {
                 double amount = Double.parseDouble(amountField.getText().trim());
-                int catId     = catCombo.getSelectedIndex() + 1; // 1-based
+                int catId     = catCombo.getSelectedIndex() + 1;
                 if (!controller.validateExpense(amount, catId)) {
                     JOptionPane.showMessageDialog(
                         dlg, controller.showError("Invalid input."), "Error", JOptionPane.ERROR_MESSAGE);
@@ -363,14 +504,22 @@ public class GUI extends JFrame {
                     dlg, controller.showNotification("Expense added!"), "Success",
                     JOptionPane.INFORMATION_MESSAGE);
                 dlg.dispose();
-            } catch (NumberFormatException ex) { JOptionPane.showMessageDialog(dlg, controller.showError("Amount must be a number."), "Error", JOptionPane.ERROR_MESSAGE); }
+            } catch (NumberFormatException ex) { 
+                JOptionPane.showMessageDialog(dlg, controller.showError("Amount must be a number."), "Error", JOptionPane.ERROR_MESSAGE); 
+            }
         });
         cancel.addActionListener(e -> dlg.dispose());
 
         finishDialog(dlg, form, cancel, ok);
     }
 
-     public void editTransaction() {
+    /**
+     * Opens a dialog for editing an existing transaction.
+     * <p>
+     * Displays list of transactions, allows selecting amount and category to update.
+     * </p>
+     */
+    public void editTransaction() {
         List<String[]> txns = controller.getAllTransactions();
         if (txns.isEmpty()) {
             JOptionPane.showMessageDialog(this, controller.showNotification("No transactions found."), "Info",
@@ -382,7 +531,7 @@ public class GUI extends JFrame {
         JComboBox<String> txnCombo = new JComboBox<>();
         applyComboStyle(txnCombo);
         for (String[] t : txns)
-        txnCombo.addItem("ID:" + t[0] + "  |  " + t[1] + "   |  " + t[2] + "  |  " + t[3]);
+            txnCombo.addItem("ID:" + t[0] + "  |  " + t[1] + "   |  " + t[2] + "  |  " + t[3]);
         JTextField amountField = styledField();
         JComboBox<String> catCombo = styledCombo();
         form.add(makeFieldBlock("Select Transaction", txnCombo));
@@ -410,12 +559,20 @@ public class GUI extends JFrame {
                 dlg.dispose();
             } catch (NumberFormatException ex) 
             { 
-             JOptionPane.showMessageDialog(dlg, controller.showError("Amount must be a number."), "Error", JOptionPane.ERROR_MESSAGE); }
+             JOptionPane.showMessageDialog(dlg, controller.showError("Amount must be a number."), "Error", JOptionPane.ERROR_MESSAGE); 
+            }
         });
         cancel.addActionListener(e -> dlg.dispose());
         finishDialog(dlg, form, cancel, ok);
     }
-     public void deleteTransaction() {
+
+    /**
+     * Opens a dialog for deleting a transaction.
+     * <p>
+     * Displays list of transactions and prompts for confirmation before deletion.
+     * </p>
+     */
+    public void deleteTransaction() {
         List<String[]> txns = controller.getAllTransactions();
         if (txns.isEmpty()) {
             JOptionPane.showMessageDialog(this, controller.showNotification("No transactions found."), "Info",
@@ -447,16 +604,26 @@ public class GUI extends JFrame {
         cancel.addActionListener(e -> dlg.dispose());
         finishDialog(dlg, form, cancel, del);
     }
-     public void ResetClick() {
+
+    /**
+     * Handles the reset budget cycle action.
+     * <p>
+     * Prompts for PIN confirmation and deletes all transactions for the current cycle.
+     * </p>
+     */
+    public void ResetClick() {
         String pinInput = JOptionPane.showInputDialog(this,
           controller.showNotification("Enter your PIN to confirm reset:"), "Reset", JOptionPane.WARNING_MESSAGE);
         if (pinInput == null) return;
         int pin;
-        try { pin = Integer.parseInt(pinInput.trim()); }
+        try { 
+            pin = Integer.parseInt(pinInput.trim()); 
+        }
         catch (NumberFormatException e) { 
-            JOptionPane.showMessageDialog( this, controller.showError("PIN must be a number."),
-     "Error",JOptionPane.ERROR_MESSAGE);
-     return; }
+            JOptionPane.showMessageDialog(this, controller.showError("PIN must be a number."),
+             "Error",JOptionPane.ERROR_MESSAGE);
+            return; 
+        }
         int storedPin = controller.getStoredPin();
         if (!controller.validateReset(controller.getCurrentUserId(), pin, storedPin)) {
             JOptionPane.showMessageDialog(this, controller.showError("Incorrect PIN. Reset cancelled."), "Error", JOptionPane.ERROR_MESSAGE);
@@ -472,49 +639,69 @@ public class GUI extends JFrame {
         }
     }
 
- private void saveBudget() {
-    String allowTxt = allowanceField.getText().trim();
-    String startTxt = startDateField.getText().trim();
-    String endTxt   = endDateField.getText().trim(); 
-    double allowance;
-     Date startDate ,endDate;
-    try {
-        allowance = Double.parseDouble(allowTxt);
-    } catch (NumberFormatException ex) {
-        JOptionPane.showMessageDialog(this,
-            controller.showError("Allowance must be a number."),
-            "Error", JOptionPane.ERROR_MESSAGE);
-        return;
+    /**
+     * Handles budget save action.
+     * <p>
+     * Validates budget parameters (allowance and date range), creates budget cycle,
+     * and displays confirmation message.
+     * </p>
+     */
+    private void saveBudget() {
+        String allowTxt = allowanceField.getText().trim();
+        String startTxt = startDateField.getText().trim();
+        String endTxt   = endDateField.getText().trim(); 
+        double allowance;
+        Date startDate, endDate;
+        try {
+            allowance = Double.parseDouble(allowTxt);
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this,
+                controller.showError("Allowance must be a number."),
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        try {
+            startDate = java.sql.Date.valueOf(startTxt);
+            endDate   = java.sql.Date.valueOf(endTxt);
+        } catch (IllegalArgumentException ex) {
+            JOptionPane.showMessageDialog(this,
+                controller.showError("Dates must be in YYYY-MM-DD format."),
+                "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        if (!controller.validate(allowance, startDate, endDate)) {
+            JOptionPane.showMessageDialog(this, controller.showError("Invalid budget details."), "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+        controller.createBudget(allowance, startTxt, endTxt);
+        JOptionPane.showMessageDialog(this, controller.showNotification("Budget saved!"),
+            "Success", JOptionPane.INFORMATION_MESSAGE);
     }
-    try {
-        startDate = java.sql.Date.valueOf(startTxt);
-        endDate   = java.sql.Date.valueOf(endTxt);
-    } catch (IllegalArgumentException ex) {
-        JOptionPane.showMessageDialog(this,
-            controller.showError("Dates must be in YYYY-MM-DD format."),
-            "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    if (!controller.validate(allowance, startDate, endDate)) {
-        JOptionPane.showMessageDialog(this, controller.showError("Invalid budget details."), "Error", JOptionPane.ERROR_MESSAGE);
-        return;
-    }
-    controller.createBudget(allowance, startTxt, endTxt);
-    JOptionPane.showMessageDialog(this,controller.showNotification("Budget saved!"),
-        "Success",JOptionPane.INFORMATION_MESSAGE);
-}
+
+    /**
+     * Opens the Dashboard window for the current user.
+     *
+     * @param userId the user ID to display dashboard for
+     */
     public void openDashboard(int userId) {
-       Dashboard dash = new Dashboard(userId, this, controller);
+        Dashboard dash = new Dashboard(userId, this, controller);
         dash.setVisible(true);
         this.setVisible(false);
+    }
 
-}
+    /**
+     * Parses a string to a double value with error handling.
+     *
+     * @param t the string to parse
+     * @return the parsed double value, or 0 if parsing fails
+     */
     private double parseDouble(String t) {
-        try { return Double.parseDouble(t); }
+        try { 
+            return Double.parseDouble(t); 
+        }
         catch (Exception e) {
-          JOptionPane.showMessageDialog(this, controller.showError("Invalid number"), "Error", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, controller.showError("Invalid number"), "Error", JOptionPane.ERROR_MESSAGE);
             return 0;
         }
     }
-
 }
